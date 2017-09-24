@@ -15,6 +15,8 @@ class BestDistributionFinder:
         self.__calCompulsoriesCreditsAndPower()
         self.__sortOptionalByPower()
         self.__searchByDps()
+        self.B1 = self.best_B1
+        self.B2 = self.best_B2
         try:
             self.displayInTable()   
         except ImportError:
@@ -72,7 +74,7 @@ class BestDistributionFinder:
                 b2_size += 1
                 if b2_size <= 8:
                     self.B2.append(course)
-        return b1_power/b1_credit + 0.002 * sum(course.power for course in self.B2)
+        return b1_power/b1_credit, 0.002 * sum(course.power for course in self.B2)
 
     def __searchByDps(self):
         if len(self.B1) == 4:
@@ -80,7 +82,8 @@ class BestDistributionFinder:
         for course in self.sorted_electives:
             if not course in self.B1:
                 self.B1.add(course)
-                curr_grade = self.__calculateCurrentGrades()
+                b1, b2 = self.__calculateCurrentGrades()
+                curr_grade = b1 + b2
                 if curr_grade > self.best_grade:
                     self.best_grade = curr_grade
                     self.best_B1 = self.B1.copy()
@@ -91,6 +94,7 @@ class BestDistributionFinder:
     def displayInTable(self):
         import prettytable 
         print('最优总分为：{}\n'.format(self.best_grade))
+        print('B1: {}\tB2: {}'.format(*self.__calculateCurrentGrades()))
         print('********************************************')
         print('B1列表\n')
         table1 = prettytable.PrettyTable(["科目","学分","成绩"])
