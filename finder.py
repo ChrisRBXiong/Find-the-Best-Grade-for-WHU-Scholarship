@@ -79,7 +79,7 @@ class BestDistributionFinder:
     def __searchByDps(self):
         if len(self.B1) == 4:
             return
-        for course in self.sorted_electives:
+        for course in self.pro_electives:
             if not course in self.B1:
                 self.B1.add(course)
                 b1, b2 = self.__calculateCurrentGrades()
